@@ -29,6 +29,8 @@ def in_window(frm, to, at=None):
     at = (at or dt.datetime.now()).time()
     a = dt.time.fromisoformat(frm)
     b = dt.time.fromisoformat(to)
+    if a == b:  # same start and end = all day
+        return True
     return a <= at < b if a <= b else (at >= a or at < b)
 
 
