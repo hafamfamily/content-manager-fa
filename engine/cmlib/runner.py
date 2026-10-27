@@ -45,8 +45,11 @@ def validate(brand, folder, item=None):
                 store.parse_time(item[t])
             except ValueError:
                 errs.append(f"item.json: {t} is not a valid time (use 2026-10-28T09:30)")
-    cfg = brands.config(brand).get("platforms") or {}
+    bcfg = brands.config(brand)
+    cfg = bcfg.get("platforms") or {}
     for p, payload in tg.items():
+        if bcfg.get("require_media") and not (payload.get("media") or []) and (cfg.get(p) or {}).get("enabled"):
+            errs.append(f"{p}: this brand requires an image or video with every post (require_media)")
         pc = cfg.get(p)
         if p not in connectors.PLATFORMS:
             errs.append(f"unknown platform {p}")
