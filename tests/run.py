@@ -291,6 +291,7 @@ def _():
     t = dt.datetime(2026, 1, 1, 13, 0)
     assert awake.in_window("06:00", "15:00", t) and not awake.in_window("14:00", "15:00", t)
     assert awake.in_window("22:00", "02:00", dt.datetime(2026, 1, 1, 23, 0))
+    assert awake.in_window("00:00", "00:00", dt.datetime(2026, 1, 1, 3, 0))  # all day
 
 
 srv.shutdown()
