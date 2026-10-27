@@ -28,7 +28,7 @@ def _req(url, body=None, files=None, timeout=300):
     if files:
         data, ctype = multipart(body or {}, files)
     else:
-        data, ctype = json.dumps(body or {}, ensure_ascii=False).encode("utf-8"), "application/json"
+        data, ctype = json.dumps(body or {}, ensure_ascii=True).encode("ascii"), "application/json; charset=utf-8"
     req = urllib.request.Request(url, data=data, headers={"Content-Type": ctype, "User-Agent": UA})
     try:
         raw = urllib.request.urlopen(req, timeout=timeout).read()
