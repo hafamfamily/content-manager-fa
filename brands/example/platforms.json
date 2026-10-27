@@ -1,0 +1,15 @@
+{
+  "timezone": "Asia/Tehran",
+  "awake": {"from": "06:00", "to": "15:00"},
+  "news_max_age_hours": 24,
+  "platforms": {
+    "telegram":  {"enabled": false, "method": "api",    "chat_id": "@your_channel", "secret": "telegram_token"},
+    "bale":      {"enabled": false, "method": "api",    "chat_id": "@your_channel", "secret": "bale_token"},
+    "eitaa":     {"enabled": false, "method": "manual", "chat_id": "", "secret": "eitaayar_token"},
+    "rubika":    {"enabled": false, "method": "manual", "chat_id": "", "secret": "rubika_token"},
+    "rubino":    {"enabled": false, "method": "manual"},
+    "instagram": {"enabled": false, "method": "manual"},
+    "youtube":   {"enabled": false, "method": "manual"},
+    "aparat":    {"enabled": false, "method": "manual"}
+  }
+}

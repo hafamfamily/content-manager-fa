@@ -1,0 +1,16 @@
+{
+  "name": "Your Brand",
+  "name_fa": "نام برند",
+  "handle": "@your_handle",
+  "website": "",
+  "theme": "paper",
+  "primary": "#A3141E",
+  "accent": "#1A1A1A",
+  "display_font": "",
+  "body_font": "",
+  "digits": "fa",
+  "signature": {
+    "telegram": "━━━━━━━━━━\n<b>{name}</b>\n🔗 {handle}",
+    "bale": "━━━━━━━━━━\n*{name}*\n🔗 {handle}"
+  }
+}

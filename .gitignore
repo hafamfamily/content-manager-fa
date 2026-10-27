@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+# data and secrets never go to git
+.secrets/
+*.db
+*.db-journal
+*.log
+.run.lock
+STOP
+brands/*
+!brands/example/
+.env
+bots.txt
