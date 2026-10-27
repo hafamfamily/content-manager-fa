@@ -17,7 +17,7 @@ import shutil
 import time
 
 from . import brand as brands
-from . import connectors, paths, store, vault
+from . import connectors, formats, paths, store, vault
 
 MAX_ATTEMPTS = 3
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,80}$")
@@ -25,6 +25,14 @@ ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,80}$")
 
 class QueueError(Exception):
     pass
+
+
+def payload_for(item, platform):
+    """Target payload with text rendered from the item's shared "html" when the target has no own text."""
+    pl = dict((item.get("targets") or {}).get(platform) or {})
+    if item.get("html") and not pl.get("text"):
+        pl.update(formats.render(platform, item["html"]))
+    return pl
 
 
 # ---------- adding and checking ----------
@@ -47,7 +55,12 @@ def validate(brand, folder, item=None):
                 errs.append(f"item.json: {t} is not a valid time (use 2026-10-28T09:30)")
     bcfg = brands.config(brand)
     cfg = bcfg.get("platforms") or {}
-    for p, payload in tg.items():
+    if item.get("html"):
+        bare = formats.bare_links(item["html"])
+        if bare:
+            errs.append("html: bare address in text, put it behind a word with <a href>: " + ", ".join(bare[:3]))
+    for p in tg:
+        payload = payload_for(item, p)
         if bcfg.get("require_media") and not (payload.get("media") or []) and (cfg.get(p) or {}).get("enabled"):
             errs.append(f"{p}: this brand requires an image or video with every post (require_media)")
         pc = cfg.get(p)
@@ -94,7 +107,7 @@ def preview(item_id):
              f"  وضعیت: {it['status']} · زمان انتشار: {it['scheduled_at'] or 'بلافاصله پس از تأیید'}"
              + (f" · انقضا: {it['expires_at']}" if it["expires_at"] else "")]
     for t in tg:
-        pl = item["targets"][t["platform"]]
+        pl = payload_for(item, t["platform"])
         media = ", ".join(f"{m['type']}:{m['path']}" for m in pl.get("media") or []) or "بدون فایل"
         lines.append(f"\n── {connectors.PLATFORMS.get(t['platform'], t['platform'])} ({t['status']}) · {media}")
         lines.append(pl.get("text") or "(بدون متن)")
@@ -243,7 +256,7 @@ def run(dry_run=False, only_item=None, out=print):
                     if gap > 0:
                         time.sleep(gap)
                     try:
-                        res = conn.publish(item["targets"][p], it["folder"], pc, lambda n: vault.get(bid, n))
+                        res = conn.publish(payload_for(item, p), it["folder"], pc, lambda n: vault.get(bid, n))
                         last_send[p] = time.time()
                         c.execute("""UPDATE targets SET status='published', attempts=attempts+1, remote_id=?, url=?,
                                      published_at=?, last_error=NULL WHERE item_id=? AND platform=?""",

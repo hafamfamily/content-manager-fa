@@ -93,9 +93,14 @@ class Rubika(Connector):
             body = {"chat_id": chat, "file_id": fid}
             if text:
                 body["text"] = text
+                if payload.get("metadata"):
+                    body["metadata"] = payload["metadata"]
             d = _req(base + "sendFile", body)
         else:
-            d = _req(base + "sendMessage", {"chat_id": chat, "text": text})
+            body = {"chat_id": chat, "text": text}
+            if payload.get("metadata"):
+                body["metadata"] = payload["metadata"]
+            d = _req(base + "sendMessage", body)
         mid = d.get("message_id")
         if mid is None:
             raise Permanent("Rubika accepted the request but returned no message id")
