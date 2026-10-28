@@ -5,7 +5,7 @@ channel must be registered in that panel (Channels). chat_id = the numeric chann
 shown in the panel's channel list.
 
 platforms.json:
-  "eitaa": {"enabled": true, "method": "api", "chat_id": "8718781", "username": "anar_tech_ir",
+  "eitaa": {"enabled": true, "method": "api", "chat_id": "1234567", "username": "your_channel",
             "secret": "eitaayar_token"}
 payload: {"text": "...", "media": [{"type": "photo"|"video"|"document", "path": "..."}]}  (0 or 1 media)
 EitaaYar has no albums and no formatting API: send plain text (no HTML/Markdown markers).

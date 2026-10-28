@@ -36,7 +36,7 @@ def list_brands():
 
 def create(slug):
     if not SLUG.match(slug):
-        raise BrandError("brand name: lowercase English letters, digits and '-' only (e.g. anar-tech)")
+        raise BrandError("brand name: lowercase English letters, digits and '-' only (e.g. my-brand)")
     dst = paths.brand_dir(slug)
     if os.path.exists(dst):
         raise BrandError(f"brand {slug} already exists: {dst}")

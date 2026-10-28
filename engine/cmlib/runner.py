@@ -17,7 +17,7 @@ import shutil
 import time
 
 from . import brand as brands
-from . import connectors, formats, paths, store, vault
+from . import connectors, formats, manual, paths, store, vault
 
 MAX_ATTEMPTS = 3
 ID_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_.-]{0,80}$")
@@ -245,8 +245,15 @@ def run(dry_run=False, only_item=None, out=print):
                     pc = (cfg.get("platforms") or {}).get(p) or {}
                     conn = connectors.get(p)
                     if pc.get("method") != "api" or not conn:
+                        if dry_run:
+                            out(f"[dry-run] would prepare a manual package {iid} -> {p}")
+                            continue
+                        try:
+                            where = manual.package(bid, item, it["folder"], p)
+                        except OSError as e:
+                            where = f"(package not written: {e})"
                         c.execute("UPDATE targets SET status='manual' WHERE item_id=? AND platform=?", (iid, p))
-                        store.event(c, bid, iid, p, "info", "manual platform: package ready for the owner to post")
+                        store.event(c, bid, iid, p, "info", f"manual platform: package ready for the owner to post: {where}")
                         summary["manual"].append((iid, p))
                         continue
                     if dry_run:
@@ -343,3 +350,21 @@ def export_json(item_id):
         it = store.get_item(c, item_id)
         return json.dumps({"item": dict(it), "targets": [dict(t) for t in store.targets(c, item_id)]},
                           ensure_ascii=False, indent=2) if it else None
+
+
+def package(item_id, platform=None):
+    """(Re)write the manual package for one item; returns {platform: folder}."""
+    with store.connect() as c:
+        it = store.get_item(c, item_id)
+        if not it:
+            raise QueueError(f"no such item {item_id}")
+        item = store.load_item(it["folder"])
+        plats = [platform] if platform else [t["platform"] for t in store.targets(c, item_id)
+                                             if t["status"] in ("manual", "pending")]
+        cfg = (brands.config(it["brand"]).get("platforms") or {})
+        out = {}
+        for p in plats:
+            if platform is None and (cfg.get(p) or {}).get("method") == "api" and connectors.get(p):
+                continue
+            out[p] = manual.package(it["brand"], item, it["folder"], p)
+        return out

@@ -268,6 +268,25 @@ def _():
     assert status("m1")[0] == "published"
 
 
+@test("manual package: album in order, plain caption, no bare address")
+def _():
+    media = [{"type": "photo", "path": f"files/s{i}.jpg"} for i in (1, 2, 3)]
+    d = make_item("m2", media=media, targets=("rubino",))
+    item = json.load(open(os.path.join(d, "item.json"), encoding="utf-8"))
+    item["targets"]["rubino"].pop("text")
+    item["html"] = '<b>عنوان</b>\nبیشتر در <a href="https://instagram.com/x">اینستاگرام ما</a>'
+    json.dump(item, open(os.path.join(d, "item.json"), "w", encoding="utf-8"), ensure_ascii=False)
+    runner.add("demo", d)
+    runner.approve("m2", "بله")
+    runner.run(out=silent)
+    where = os.path.join(paths.brand_dir("demo"), "manual", "m2", "rubino")
+    names = sorted(os.listdir(where))
+    assert names == sorted(["01.jpg", "02.jpg", "03.jpg", "متن.txt", "راهنما.txt"]), names
+    cap = open(os.path.join(where, "متن.txt"), encoding="utf-8").read()
+    assert "اینستاگرام ما" in cap and "https://" not in cap and "<b>" not in cap
+    assert runner.package("m2") == {"rubino": where}
+
+
 @test("platform check reports bot admin status")
 def _():
     info = connectors.get("telegram").check(brand.platform_cfg("demo", "telegram"), lambda n: vault.get("demo", n))

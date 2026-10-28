@@ -1,8 +1,22 @@
 {
   "name": "content-manager-fa",
   "description": "مدیریت یکپارچهٔ محتوای فارسی در ۸ سکو (اینستاگرام، یوتیوب، آپارات، تلگرام، بله، ایتا، روبیکا، روبینو) برای هر برند و هر موضوع: تولید با Claude، تأیید صاحب برند، و انتشار با موتور اجرایی مستقل روی کامپیوتر خود او.",
-  "version": "0.1.0",
-  "author": {"name": "hafamfamily", "url": "https://github.com/hafamfamily"},
+  "version": "0.2.0",
+  "author": {
+    "name": "hafamfamily",
+    "url": "https://github.com/hafamfamily"
+  },
   "repository": "https://github.com/hafamfamily/content-manager-fa",
-  "keywords": ["persian", "farsi", "telegram", "bale", "eitaa", "rubika", "instagram", "youtube", "aparat", "content"]
+  "keywords": [
+    "persian",
+    "farsi",
+    "telegram",
+    "bale",
+    "eitaa",
+    "rubika",
+    "instagram",
+    "youtube",
+    "aparat",
+    "content"
+  ]
 }

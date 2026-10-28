@@ -166,6 +166,11 @@ def cmd_posted(a):
         sys.exit(str(e))
 
 
+def cmd_package(a):
+    for p, where in runner.package(a.item, a.platform).items():
+        print(f"{p}: {where}")
+
+
 def cmd_stop(a):
     os.makedirs(paths.home(), exist_ok=True)
     if a.cmd == "stop":
@@ -241,6 +246,7 @@ def main():
         p = sp.add_parser(n); p.add_argument("item"); p.add_argument("--note", default=""); p.set_defaults(fn=cmd_close)
     p = sp.add_parser("run"); p.add_argument("--dry-run", action="store_true"); p.add_argument("--item"); p.set_defaults(fn=cmd_run)
     p = sp.add_parser("retry"); p.add_argument("item"); p.add_argument("--platform"); p.set_defaults(fn=cmd_retry)
+    p = sp.add_parser("package"); p.add_argument("item"); p.add_argument("--platform"); p.set_defaults(fn=cmd_package)
     p = sp.add_parser("posted"); p.add_argument("item"); p.add_argument("platform"); p.add_argument("--url", default=""); p.set_defaults(fn=cmd_posted)
     for n in ("stop", "resume"):
         p = sp.add_parser(n); p.set_defaults(fn=cmd_stop)
