@@ -1,5 +1,7 @@
 # content-manager-fa
 
+> **English:** Unified Persian content management across 8 platforms (Instagram, YouTube, Aparat, Telegram, Bale, Eitaa, Rubika, Rubino) for any brand: Claude handles research, drafting, branded images and quality checks with owner approval, and a standalone engine (`engine/cm.py`) publishes approved posts on schedule from the owner's own computer, without Claude. MIT licensed.
+
 مدیریت یکپارچهٔ محتوای فارسی در ۸ سکو (تلگرام، بله، ایتا، روبیکا، روبینو، اینستاگرام، یوتیوب، آپارات)،
 برای **هر برند و هر موضوع**.
 
